@@ -26,6 +26,8 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 <listener>
 	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 </listener>
-
+<listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+</listener> 
   <display-name>Archetype Created Web Application</display-name>
 </web-app>

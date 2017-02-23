@@ -2,6 +2,7 @@ package com.github.elizabetht.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,25 +25,31 @@ public class Student {
 	
 	@NotEmpty
 	@Size(min=4, max=20)
+	@Column(name = "userName")
 	private String userName;
 	
 	@NotEmpty
+	@Column(name = "firstName")
 	private String firstName;
 	
 	@NotEmpty
+	@Column(name = "lastName")
 	private String lastName;
 	
 	@NotEmpty
 	@Size(min=4, max=8)
+	@Column(name = "password")
 	private String password;
 	
 	@NotEmpty
 	@Email
+	@Column(name = "emailAddress")
 	private String emailAddress;
 	
 	@NotNull
 	@Past
 	@DateTimeFormat(pattern="MM/dd/yyyy")
+	@Column(name = "dateOfBirth")
 	private Date dateOfBirth;
 	
 	public Long getId() {

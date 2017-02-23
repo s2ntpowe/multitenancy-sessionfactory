@@ -11,37 +11,39 @@
 
 	<context:annotation-config />
 	
-	<jpa:repositories base-package="com.github.elizabetht.repository" />
+	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
-	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+	<bean id="studentDAO" class="com.github.elizabetht.dao.StudentDAO" />
+	<bean id="sessionAgencyHolder" class="com.github.elizabetht.util.SessionAgencyHolder" />
 
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="punit" />
-		<property name="dataSource" ref="dataSource" />
+	<bean id="multitenancyConnectionProvider"
+       class="com.github.elizabetht.util.MultiTenantConnectionProviderImpl"/>
+	<bean id="dataSourceLookup"
+       class="com.github.elizabetht.util.MultiTenantDataSourceLookup"/>
+       
+	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="showSql" value="true" />
+				<property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
 			</bean>
 		</property>
 		<property name="jpaPropertyMap">
-			<map>
-				<entry key="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-				<entry key="hibernate.hbm2ddl.auto" value="validate" />
-				<entry key="hibernate.format_sql" value="true" />
-			</map>
-		</property>
+ 		    <map> 
+                <entry key="hibernate.multi_tenant_connection_provider" value-ref="multitenancyConnectionProvider"/> 
+   	    			    	 
+ 		    	<entry key="hibernate.multiTenancy" value="DATABASE"/> 
+ 		    </map> 
+ 		</property> 
 	</bean>
-	
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-	</bean>
-	
-	<tx:annotation-driven transaction-manager="transactionManager" />
-	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://mydbinstance.cavpckqdd90v.us-east-1.rds.amazonaws.com:3306/studentEnrollment?autoReconnect=true&amp;createDatabaseIfNotExist=true&amp;" />
-		<property name="username" value="awsuser" />
-		<property name="password" value="password" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+</bean>
+
+	<bean class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close"
+    id="dataSource">
+    <property name="driverClass" value="com.mysql.jdbc.Driver" />
+    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/studentEnrollment" />
+    <property name="username" value="springy" />
+    <property name="password" value="pass" />   
 	</bean>
 </beans>

@@ -108,7 +108,7 @@
 							class="bs-example form-horizontal" commandName="student">
 							<fieldset>
 								<legend>Student Enrollment Signup Form</legend>
-
+		<button type="button" id="testButton">Test</button>
 								<div class="form-group">
 									<label for="userNameInput" class="col-lg-3 control-label">User
 										Name</label>
@@ -217,6 +217,13 @@
 
 	<script type="text/javascript">
 		$(function() {
+			$("#testButton").on("click", function() {	
+				alert("TESETDB");
+				 $.get('testDatabase',{agency:"nsa"},function(responseText) { 
+			            var returnedText = responseText;
+			            alert(returnedText);
+			     });
+			 });
 			var yesButton = $("#yesbutton");
 			var progress = $("#doitprogress");		
 			

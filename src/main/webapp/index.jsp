@@ -26,6 +26,7 @@ body {
 
 		<div class="navbar-collapse collapse navbar-responsive-collapse">
 			<form class="navbar-form navbar-right">
+				<button type="button" id="testButton">Test</button>
 				<input type="text" class="form-control" placeholder="Search">
 			</form>
 			<ul class="nav navbar-nav navbar-right">
@@ -54,14 +55,20 @@ body {
 			<a class="btn btn-primary" href="signup.html">Signup » </a> <a
 				class="btn btn-primary" href="login.html">Login » </a>
 		</div>
-
 		<div></div>
 	</div>
-	<script src="jquery-1.8.3.js">
+<script src="jquery-1.8.3.js"></script>
+<script src="bootstrap/js/bootstrap.js"></script>
+<script>
+$(document).ready(function(){			
+	$("#testButton").on("click", function() {	
+		alert("<spring:url value='testDatabase'/>");
+		 $.get('<spring:url value="testDatabase"/>',{agency:"nsa"},function(responseText) { 
+	            var returnedText = responseText;
+	            alert(returnedText);
+	     });
+	 });
+});
 </script>
-
-	<script src="bootstrap/js/bootstrap.js">
-</script>
-
 </body>
 </html>
