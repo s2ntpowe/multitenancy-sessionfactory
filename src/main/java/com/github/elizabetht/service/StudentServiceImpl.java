@@ -11,6 +11,7 @@ import com.github.elizabetht.model.Student;
 
 
 @Service("studentService")
+@Transactional
 public class StudentServiceImpl implements StudentService {
 
 
@@ -20,6 +21,7 @@ public class StudentServiceImpl implements StudentService {
 	public Student save(Student student) {
 		return studentDAO.saveStudent(student);
 	}
+	@Transactional
 	public boolean findByLogin(String userName, String password) {	
 		Student stud =  studentDAO.findByUserName(userName);
 		

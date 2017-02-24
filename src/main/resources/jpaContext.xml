@@ -4,40 +4,51 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+    http://www.springframework.org/schema/tx  
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+    http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
 	<context:annotation-config />
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
-	
-	<bean id="studentDAO" class="com.github.elizabetht.dao.StudentDAO" />
+
 	<bean id="sessionAgencyHolder" class="com.github.elizabetht.util.SessionAgencyHolder" />
 
 	<bean id="multitenancyConnectionProvider"
        class="com.github.elizabetht.util.MultiTenantConnectionProviderImpl"/>
 	<bean id="dataSourceLookup"
        class="com.github.elizabetht.util.MultiTenantDataSourceLookup"/>
+    <bean id="tenantResolver"
+       class="com.github.elizabetht.util.CurrentTenantIdentifierResolverImpl"/>
        
-	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
-			</bean>
-		</property>
-		<property name="jpaPropertyMap">
- 		    <map> 
-                <entry key="hibernate.multi_tenant_connection_provider" value-ref="multitenancyConnectionProvider"/> 
-   	    			    	 
- 		    	<entry key="hibernate.multiTenancy" value="DATABASE"/> 
- 		    </map> 
- 		</property> 
-	</bean>
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
-</bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+     <property name="dataSource" ref="dataSource" />
+     <property name="packagesToScan">
+    <list>
+        <value>com.github.elizabetht.model</value>
+    </list>
+</property>
+    <property name="hibernateProperties">
+        <props>
+        	<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+			<prop key="hibernate.jdbc.lob.non_contextual_creation">true</prop>
+            <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+          
+            <prop key="hibernate.show_sql">true</prop>
+            <prop key="hibernate.multiTenancy">DATABASE</prop>
+            <prop key="hibernate.multi_tenant_connection_provider">com.github.elizabetht.util.MultiTenantConnectionProviderImpl</prop>
+            <prop key="hibernate.tenant_identifier_resolver">com.github.elizabetht.util.CurrentTenantIdentifierResolverImpl</prop>
+        </props>
+    </property>
+</bean>   
+
 
 	<bean class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close"
     id="dataSource">
@@ -45,5 +56,19 @@
     <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/studentEnrollment" />
     <property name="username" value="springy" />
     <property name="password" value="pass" />   
+    <property name="idleMaxAge" value="240" />   
+    <property name="idleConnectionTestPeriod" value="60" />   
+    <property name="maxConnectionsPerPartition" value="10" />   
+    <property name="minConnectionsPerPartition" value="1" />   
+    <property name="partitionCount" value="2" />   
+    <property name="acquireIncrement" value="5" />   
+    <property name="statementsCacheSize" value="100" />   
+    
 	</bean>
+
+<bean id="transactionManager"
+    class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+      <property name="sessionFactory" ref="sessionFactory" />
+   </bean>
+	
 </beans>

@@ -58,7 +58,7 @@ public class StudentController {
 		model.addAttribute("studentLogin", studentLogin);
 		return "login";
 	}
-	
+	@Transactional
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String login(@Valid @ModelAttribute("studentLogin") StudentLogin studentLogin, BindingResult result, HttpSession httpSession) {
 		if (result.hasErrors()) {

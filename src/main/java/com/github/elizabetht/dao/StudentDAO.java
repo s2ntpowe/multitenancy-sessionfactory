@@ -11,20 +11,19 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.elizabetht.model.Student;
-
+@Transactional
 @Component
 public class StudentDAO extends GenericHibernateDAO<Student> {
 
-	@Autowired
-	EntityManagerFactory entFactory;
-	
 
 	public List<Student> getStudents(){
 		Criteria crit = createCriteria(Student.class);
 		return crit.list();
 	}
+	@Transactional
 	public Student findByUserName(String username){
 		Query query =  createQuery("from Student where userName = :userName")
 								  .setString("userName",username);

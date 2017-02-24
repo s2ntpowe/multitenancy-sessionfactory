@@ -18,6 +18,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -31,50 +32,35 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @param <T> 
  * @param <ID> 
  */ 
-@Repository
 @Transactional
+@Repository
 public abstract class GenericHibernateDAO<T>   
 implements GenericDAO<T>{   
 
     private Class<T> persistentClass;   
-    private Session session;   
- 
-    @Autowired
-    EntityManagerFactory entFactory;
     
+    @Autowired
+    protected SessionFactory sessionFactory;
+    
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     @SuppressWarnings("unchecked") 
     public GenericHibernateDAO() { 
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];   
     }   
  
-    public void setSession(Session s) {   
-        this.session = s; 
-    }   
  
     protected Session getSession(){ 
-        try{ 
-        	ServletRequestAttributes request = (ServletRequestAttributes) RequestContextHolder
-                    .currentRequestAttributes();
-        HttpSession httpSession = request.getRequest().getSession();
-                System.out.println( "getting current session [getCurrentSession()]" ); 
-                SessionFactory sessionFactory = entFactory.unwrap(SessionFactory.class);
-                System.out.println("HTTP SESSION AGENCY ATTRIBUTE: " + httpSession.getAttribute("agency"));
-                String agency = "nga";
-                if(httpSession.getAttribute("agency")!=null){
-                	agency = httpSession.getAttribute("agency").toString();
-                }
-                this.session = sessionFactory
-        		        .withOptions()
-        		        .tenantIdentifier(agency)
-        		        .openSession();
-
-       
-        } 
-        catch (HibernateException e){ 
-            System.out.println( "No Session is associated with current Thread. " + 
-                    "Make sure that you are initiating DAO instances in the TransactionScope." + e ); 
-        } 
-        return this.session; 
+    	Session session;
+    	 try {
+    	        session = sessionFactory.getCurrentSession();
+    	    } catch (HibernateException e) {
+    	        session = sessionFactory.openSession();
+    	    }
+        return session; 
     } 
  
     public Class<T> getPersistentClass() {   
@@ -92,7 +78,7 @@ implements GenericDAO<T>{
         return entity;   
     }   
  
- 
+
     public T makePersistent(T entity) { 
         getSession().saveOrUpdate( entity ); 
         return entity;   

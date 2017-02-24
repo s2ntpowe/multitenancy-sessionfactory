@@ -32,8 +32,8 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 
 	Log logger = LogFactory.getLog(getClass());
 
-	private String tenantDbConfigs =  "classpath*:/*.properties"; // For testing
-	private String tenantDbConfigsOverride = "classpath*:/*.properties"; // For production
+	private String tenantDbConfigs =  "classpath*:/*database.properties"; // For testing
+	private String tenantDbConfigsOverride = "classpath*:/*database.properties"; // For production
 	private String tenantRegex = "@\"^.*?(?=-)\"";
 
 	@Autowired
@@ -72,7 +72,7 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 		logger.info("-- CLASSPATH TENANTS --");
 		addTenantDataSources(defaultDataSource, tenantDbConfigs);
 		logger.info("-- GLOBAL TENANTS --");
-		addTenantDataSources(defaultDataSource, "file:" + catalinaBase + tenantDbConfigsOverride);
+		addTenantDataSources(defaultDataSource,  tenantDbConfigsOverride);
 		logger.info("---------------------------------------------------");
 	}
 
