@@ -1,4 +1,4 @@
-package com.github.elizabetht.util;
+package com.powers.multitenant.util;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,6 +22,7 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
 		
 		String tenant = resolveTenantByHttpSession();		
 		logger.trace("Tenant resolved: " + tenant);
+		System.out.println("Tenant resolved: " + tenant);
 		return tenant;
 	}
 	

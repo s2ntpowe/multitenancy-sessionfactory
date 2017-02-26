@@ -1,4 +1,4 @@
-package com.github.elizabetht.dao;
+package com.powers.multitenant.dao;
 
 import java.io.Serializable; 
 import java.util.List; 
@@ -10,7 +10,7 @@ import java.util.List;
  * @param <T> 
  * @param <ID> 
  */ 
-public interface GenericDAO<T> {   
+public interface GenericDAO<T> extends Serializable {   
  
     T findById(Long id, boolean lock);   
   

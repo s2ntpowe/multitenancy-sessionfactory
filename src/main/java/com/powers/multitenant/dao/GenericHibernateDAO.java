@@ -1,9 +1,10 @@
-package com.github.elizabetht.dao;
+package com.powers.multitenant.dao;
 
 import java.io.Serializable; 
 import java.lang.reflect.ParameterizedType; 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.http.HttpSession;
 
@@ -32,20 +33,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @param <T> 
  * @param <ID> 
  */ 
-@Transactional
-@Repository
-public abstract class GenericHibernateDAO<T>   
-implements GenericDAO<T>{   
 
-    private Class<T> persistentClass;   
+@Repository
+public abstract class GenericHibernateDAO<T> implements Serializable, GenericDAO<T>{   
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Class<T> persistentClass;   
     
-    @Autowired
+    @Resource
     protected SessionFactory sessionFactory;
     
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @SuppressWarnings("unchecked") 
     public GenericHibernateDAO() { 

@@ -64,6 +64,27 @@
             </div>
 		</div>
 	</div>
+	<div align="center">
+        <h1>Contact List</h1>
+       	<table border="1">
+        	<th>ID</th>
+        	<th>Username</th>
+        	<th>Firstname</th>
+        	<th>Lastname</th>
+        	<th>Email</th>        	
+        	
+			<c:forEach var="student" items="${studentList}" varStatus="status">
+        	<tr>
+        		<td>${student.id}</td>
+				<td>${student.username}</td>
+				<td>${student.firstName}</td>
+				<td>${student.lastName}</td>
+				<td>${student.emailAddress}</td>
+	       	</tr>
+			</c:forEach>	        	
+       	</table>
+       	<hr>
+    </div>
 	<div></div>
 	<div></div>
 	<a class="btn btn-primary" href="<spring:url value="login.html"/>">Login

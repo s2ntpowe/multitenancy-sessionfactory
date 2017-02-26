@@ -1,8 +1,8 @@
-package com.github.elizabetht.service;
+package com.powers.multitenant.service;
 
 import java.util.List;
 
-import com.github.elizabetht.model.Student;
+import com.powers.multitenant.model.Student;
 
 public interface StudentService {
 	Student save(Student student);

@@ -17,7 +17,6 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 	<servlet-name>studentHibernateServlet</servlet-name>
 	<url-pattern>*.html</url-pattern>
 </servlet-mapping>
-
 <context-param>
 	<param-name>contextConfigLocation</param-name>
 	<param-value>classpath:/jpaContext.xml</param-value>

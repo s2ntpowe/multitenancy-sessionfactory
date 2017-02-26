@@ -1,5 +1,6 @@
-package com.github.elizabetht.dao;
+package com.powers.multitenant.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
@@ -13,17 +14,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.elizabetht.model.Student;
-@Transactional
+import com.powers.multitenant.model.Student;
+
 @Component
 public class StudentDAO extends GenericHibernateDAO<Student> {
-
 
 	public List<Student> getStudents(){
 		Criteria crit = createCriteria(Student.class);
 		return crit.list();
 	}
-	@Transactional
+	
 	public Student findByUserName(String username){
 		Query query =  createQuery("from Student where userName = :userName")
 								  .setString("userName",username);
@@ -38,5 +38,15 @@ public class StudentDAO extends GenericHibernateDAO<Student> {
     	System.out.println("SAVE ENTITY....");
         Student s = save( stud ); 
         return s; 
-    } 
+    }
+
+	public Student makePersistent(Student entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void makeTransient(Student entity) {
+		// TODO Auto-generated method stub
+		
+	} 
 }

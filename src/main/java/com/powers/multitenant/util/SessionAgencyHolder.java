@@ -1,4 +1,4 @@
-package com.github.elizabetht.util;
+package com.powers.multitenant.util;
 
 import java.io.Serializable;
 

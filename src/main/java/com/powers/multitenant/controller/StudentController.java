@@ -1,6 +1,7 @@
-package com.github.elizabetht.controller;
+package com.powers.multitenant.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -14,14 +15,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.github.elizabetht.model.Student;
-import com.github.elizabetht.model.StudentLogin;
-import com.github.elizabetht.service.StudentService;
+import com.powers.multitenant.model.Student;
+import com.powers.multitenant.model.StudentLogin;
+import com.powers.multitenant.service.StudentService;
+
 
 @Controller
 @SessionAttributes("student")
-@Transactional
 public class StudentController {
 	
 
@@ -58,24 +61,23 @@ public class StudentController {
 		model.addAttribute("studentLogin", studentLogin);
 		return "login";
 	}
-	@Transactional
+
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String login(@Valid @ModelAttribute("studentLogin") StudentLogin studentLogin, BindingResult result, HttpSession httpSession) {
+	public String login(@Valid @ModelAttribute("studentLogin") StudentLogin studentLogin,BindingResult result,Map<String, Object> model, HttpSession httpSession) {
 		if (result.hasErrors()) {
 			return "login";
 		} else {
-			boolean found = studentService.findByLogin(studentLogin.getUserName(), studentLogin.getPassword());
+			
 			if(studentLogin.getUserName().contains("nga")){
 				System.out.println("LOGIN: " + studentLogin.getUserName());
-				httpSession.setAttribute("agency", "nga");
+				httpSession.setAttribute("hibernate.tenant_identifier_resolver", "nga");
 			}
 			else {
-				httpSession.setAttribute("agency", "nsa");
+				httpSession.setAttribute("hibernate.tenant_identifier_resolver", "nsa");
 			}
-			List<Student> students = studentService.getAllStudents();		
-			for(Student s:students){
-				System.out.println("STUDENT: " + s.getUserName() + " "  + s.getFirstName() + " " + s.getLastName());
-			}
+			boolean found = studentService.findByLogin(studentLogin.getUserName(), studentLogin.getPassword());
+			List<Student> students = studentService.getAllStudents();	
+			model.put("studentList",students);
 			if (found) {				
 				return "success";
 			} else {				
@@ -84,17 +86,31 @@ public class StudentController {
 		}
 		
 	}
+
+
+	//@RequestMapping(value="success.jsp", method=RequestMethod.GET)
+	public ModelAndView home(RedirectAttributes redir) {
+		List<Student> students = studentService.getAllStudents();		
+		System.out.println("Setting ModelAndView ere at success...");
+		for(Student s:students){
+			System.out.println("MAV ---- STUDENT: " + s.getUserName() + " "  + s.getFirstName() + " " + s.getLastName());
+		}
+		ModelAndView modelAndView = new ModelAndView("success.jsp");
+		
+		modelAndView.setViewName("redirect:welcome");
+	    redir.addFlashAttribute("studentList",students);
+	    return modelAndView;
+
+	}
 	
-	@RequestMapping(value="/testDatabase", method=RequestMethod.GET)
+	@RequestMapping(value="/testdatabase", method=RequestMethod.GET)
 	public String testDatabase() {			
-		String str = "";
 		System.out.println("In controller...");
 		List<Student> students = studentService.getAllStudents();		
 		for(Student s:students){
 			System.out.println("STUDENT: " + s.getUserName() + " "  + s.getFirstName() + " " + s.getLastName());
-			str += s.getUserName() + " "  + s.getFirstName() + " " + s.getLastName();
 		}
 		
-		return "TEST";
+		return "thisstuff";
 	}
 }

@@ -6,9 +6,6 @@
 body {
 	height: 100%;
 	margin: 0;
-	background: url(assets/img/books.jpg);
-	background-size: 1440px 800px;
-	background-repeat: no-repeat;
 	display: compact;
 }
 </style>
@@ -48,10 +45,8 @@ body {
 		<div class="jumbotron">
 			<div>
 				<h1>Welcome to Online Student Enrollment!</h1>
-				<p>To get started, you need to enter your details to enroll with
-					us. Or login to access your details, if you are already enrolled.</p>
+				<p>This project is an example implementation of Multi-Tenancy with Hibernate and Spring.</p>
 			</div>
-
 			<a class="btn btn-primary" href="signup.html">Signup » </a> <a
 				class="btn btn-primary" href="login.html">Login » </a>
 		</div>
@@ -62,8 +57,8 @@ body {
 <script>
 $(document).ready(function(){			
 	$("#testButton").on("click", function() {	
-		alert("<spring:url value='testDatabase'/>");
-		 $.get('<spring:url value="testDatabase"/>',{agency:"nsa"},function(responseText) { 
+		alert("testing");
+		 $.get('testdatabase.html',{agency:"nsa"},function(responseText) { 
 	            var returnedText = responseText;
 	            alert(returnedText);
 	     });

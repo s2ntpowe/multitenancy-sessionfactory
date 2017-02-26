@@ -1,4 +1,4 @@
-package com.github.elizabetht.util;
+package com.powers.multitenant.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -104,7 +104,7 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 				// Add new datasource with own configuration per tenant
 				BoneCPDataSource customDataSource = createTenantDataSource(props, defaultDataSource);
 				addDataSource(tenantId, customDataSource); // It replace if tenantId was already there.
-
+				System.out.println("Configured tenant: " + tenantId + " - Properties: " + customDataSource.toString());
 				logger.info("Configured tenant: " + tenantId + " - Properties: " + customDataSource.toString());
 
 			}
