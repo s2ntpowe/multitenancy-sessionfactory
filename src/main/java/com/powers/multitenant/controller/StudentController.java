@@ -90,7 +90,7 @@ public class StudentController {
 			}
 		}
 		
-	}
+	} 
 
 	@RequestMapping(value="/getAllStudents", method=RequestMethod.GET)
 	public String getAllStudents(@RequestParam("tenantId") String tenantId,HttpSession httpSession) {			
