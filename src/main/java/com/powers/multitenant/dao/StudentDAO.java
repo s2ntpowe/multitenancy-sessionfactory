@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.powers.multitenant.model.Student;
 
-@Component
-public class StudentDAO extends GenericHibernateDAO<Student> {
+@Repository
+public class StudentDAO extends GenericHibernateDAO<Student> implements Serializable {
 
 	public List<Student> getStudents(){
 		Criteria crit = createCriteria(Student.class);
@@ -34,10 +34,11 @@ public class StudentDAO extends GenericHibernateDAO<Student> {
 		}
 		return null;
 	}
-	public Student saveStudent(Student stud){      
-    	System.out.println("SAVE ENTITY....");
-        Student s = save( stud ); 
-        return s; 
+	
+	public Long saveStudent(Student stud){      
+        Long id = save( stud );
+        System.out.println("Saving student returns ID: " + id);        
+        return id;
     }
 
 	public Student makePersistent(Student entity) {

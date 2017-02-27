@@ -11,8 +11,11 @@
 
 	<context:annotation-config />
 	
-	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
-
+	<context:component-scan base-package="com.powers.multitenant.service" />
+	<context:component-scan base-package="com.powers.multitenant.dao" />
+	<context:component-scan base-package="com.powers.multitenant.controller" />
+	
+	
 	<bean id="multitenancyConnectionProvider"
        class="com.powers.multitenant.util.MultiTenantConnectionProviderImpl"/>
 	<bean id="dataSourceLookup"
@@ -29,12 +32,12 @@
     			<value>com.powers.multitenant.model</value>
     		</list>
 		</property>
-    
-    	<property name="hibernateProperties">
+    	<property name="hibernateProperties">    	
 		    <map> 
                 <entry key="hibernate.multi_tenant_connection_provider" value-ref="multitenancyConnectionProvider"/> 
    	    	    <entry key="hibernate.tenant_identifier_resolver" value-ref="tenantResolver"/>		    			    	 
  		    	<entry key="hibernate.multiTenancy" value="DATABASE"/> 
+ 		    	<entry key="hibernate.connection.autocommit" value="true" />
  		    </map> 
     	</property>
 	</bean>   
@@ -51,5 +54,6 @@
       <property name="sessionFactory" ref="sessionFactory" />
       <property name="autodetectDataSource" value="false"/>
    	</bean>
-	
+   	
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
 </beans>

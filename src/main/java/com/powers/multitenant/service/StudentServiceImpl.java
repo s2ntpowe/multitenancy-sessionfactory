@@ -3,12 +3,12 @@ package com.powers.multitenant.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.powers.multitenant.dao.StudentDAO;
 import com.powers.multitenant.model.Student;
-
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService {
@@ -16,9 +16,9 @@ public class StudentServiceImpl implements StudentService {
 
 	@Autowired
 	private StudentDAO studentDAO;
-
-	public Student save(Student student) {
-		return studentDAO.saveStudent(student);
+	
+	public void save(Student student) {
+		studentDAO.saveStudent(student);
 	}
 
 	public boolean findByLogin(String userName, String password) {	

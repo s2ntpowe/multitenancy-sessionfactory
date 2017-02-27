@@ -23,7 +23,6 @@ body {
 
 		<div class="navbar-collapse collapse navbar-responsive-collapse">
 			<form class="navbar-form navbar-right">
-				<button type="button" id="testButton">Test</button>
 				<input type="text" class="form-control" placeholder="Search">
 			</form>
 			<ul class="nav navbar-nav navbar-right">
@@ -47,8 +46,10 @@ body {
 				<h1>Welcome to Online Student Enrollment!</h1>
 				<p>This project is an example implementation of Multi-Tenancy with Hibernate and Spring.</p>
 			</div>
-			<a class="btn btn-primary" href="signup.html">Signup » </a> <a
-				class="btn btn-primary" href="login.html">Login » </a>
+			<a class="btn btn-primary" href="signup.html">Signup » </a> 
+			<a class="btn btn-primary" href="login.html">Login » </a>
+			<a class="btn btn-primary" href="#" id="tenant1StudentsButton">View Students Tenant1 » </a>
+			<a class="btn btn-primary" href="#" id="tenant2StudentsButton">View Students Tenant2 » </a>
 		</div>
 		<div></div>
 	</div>
@@ -56,9 +57,14 @@ body {
 <script src="bootstrap/js/bootstrap.js"></script>
 <script>
 $(document).ready(function(){			
-	$("#testButton").on("click", function() {	
-		alert("testing");
-		 $.get('testdatabase.html',{agency:"nsa"},function(responseText) { 
+	$("#tenant1StudentsButton").on("click", function() {	
+		 $.get('getAllStudents.html',{tenantId:"tenant1"},function(responseText) { 
+	            var returnedText = responseText;
+	            alert(returnedText);
+	     });
+	 });
+	$("#tenant2StudentsButton").on("click", function() {	
+		 $.get('getAllStudents.html',{tenantId:"tenant2"},function(responseText) { 
 	            var returnedText = responseText;
 	            alert(returnedText);
 	     });

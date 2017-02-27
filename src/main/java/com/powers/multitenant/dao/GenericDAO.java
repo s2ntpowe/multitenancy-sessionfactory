@@ -10,9 +10,11 @@ import java.util.List;
  * @param <T> 
  * @param <ID> 
  */ 
-public interface GenericDAO<T> extends Serializable {   
+public interface GenericDAO<T> {   
  
-    T findById(Long id, boolean lock);   
+	Serializable save(T entity);
+	
+	T findById(Long id, boolean lock);   
   
     T makePersistent(T entity);   
  

@@ -14,7 +14,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentifierResolver {
 
 	private static final String KEY_TENANTID_SESSION = "hibernate.tenant_identifier_resolver";
-	private static final String DEFAULT_TENANTID = "nga";
+	private static final String DEFAULT_TENANTID = "tenant1";
 	Logger logger = Logger.getLogger(getClass());
 	
 	

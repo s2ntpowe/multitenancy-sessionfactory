@@ -179,12 +179,18 @@
 			<artifactId>javax.annotation</artifactId>
 			<version>3.2-b06</version>
 		</dependency>
+<dependency>
+    <groupId>com.googlecode.json-simple</groupId>
+    <artifactId>json-simple</artifactId>
+    <version>1.1.1</version>
+</dependency>
+
 	</dependencies>
 	<developers>
 		<developer>
-			<id>elizabetht</id>
-			<name>Elizabeth Thomas</name>
-			<email>email2eliza@gmail.com</email>
+			<id>s2ntpowe</id>
+			<name>Nathan Powers</name>
+			<email>nathant.powers@gmail.com</email>
 		</developer>
 	</developers>
 	<build>

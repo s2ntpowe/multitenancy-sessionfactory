@@ -20,8 +20,10 @@ import org.hibernate.criterion.Example;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -44,7 +46,7 @@ public abstract class GenericHibernateDAO<T> implements Serializable, GenericDAO
 
 	private Class<T> persistentClass;   
     
-    @Resource
+    @Autowired
     protected SessionFactory sessionFactory;
     
 
@@ -55,14 +57,8 @@ public abstract class GenericHibernateDAO<T> implements Serializable, GenericDAO
     }   
  
  
-    protected Session getSession(){ 
-    	Session session;
-    	 try {
-    	        session = sessionFactory.getCurrentSession();
-    	    } catch (HibernateException e) {
-    	        session = sessionFactory.openSession();
-    	    }
-        return session; 
+    protected Session getSession(){     	
+        return sessionFactory.getCurrentSession();
     } 
  
     public Class<T> getPersistentClass() {   
@@ -93,14 +89,16 @@ public abstract class GenericHibernateDAO<T> implements Serializable, GenericDAO
     public void flush() {   
         getSession().flush();   
     }   
- 
-    public T save(T entity){      
-    	System.out.println("SAVE ENTITY....");
-    	Session sess = getSession();
-    	sess.beginTransaction();
-        sess.save( entity ); 
-        sess.getTransaction().commit();
-        return entity; 
+
+    public Long save(T entity){      
+    	System.out.println("Is transaction active " + TransactionSynchronizationManager.isActualTransactionActive());
+
+   // 	sess.beginTransaction();
+        Long id = (Long)getSession().save( entity ); 
+  //    sess.getTransaction().commit();
+  //      flush();
+
+       return id;
     } 
  
     public void clear() {   

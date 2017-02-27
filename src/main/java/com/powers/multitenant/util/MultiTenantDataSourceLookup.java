@@ -65,14 +65,14 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 		logger.info("---------------------------------------------------");
 
 		// Add the default tenant and datasource
-		addDataSource("nga", defaultDataSource);
+		addDataSource("tenant1", defaultDataSource);
 		logger.info("Configuring default tenant: DefaultTenant - Properties: " + defaultDataSource.toString());
 
 		// Add the other tenants
 		logger.info("-- CLASSPATH TENANTS --");
 		addTenantDataSources(defaultDataSource, tenantDbConfigs);
 		logger.info("-- GLOBAL TENANTS --");
-		addTenantDataSources(defaultDataSource,  tenantDbConfigsOverride);
+	//	addTenantDataSources(defaultDataSource,  tenantDbConfigsOverride);
 		logger.info("---------------------------------------------------");
 	}
 
