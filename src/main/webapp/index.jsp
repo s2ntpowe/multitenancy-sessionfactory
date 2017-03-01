@@ -51,6 +51,23 @@ body {
 			<a class="btn btn-primary" href="#" id="tenant1StudentsButton">View Students Tenant1 » </a>
 			<a class="btn btn-primary" href="#" id="tenant2StudentsButton">View Students Tenant2 » </a>
 		</div>
+		<hr>
+		<div id="studentTableDiv" style="display:none;text-alignment:center">
+			<table class="table table-hover table-condensed table-striped table-bordered" id="studentTable">
+				<thead>
+					<tr>
+						<th>ClassId</th>
+						<th>ClassName</th>
+						<th>Username</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Email</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
 		<div></div>
 	</div>
 <script src="jquery-1.8.3.js"></script>
@@ -58,18 +75,38 @@ body {
 <script>
 $(document).ready(function(){			
 	$("#tenant1StudentsButton").on("click", function() {	
-		 $.get('getAllStudents.html',{tenantId:"tenant1"},function(responseText) { 
-	            var returnedText = responseText;
-	            alert(returnedText);
-	     });
+		setTenant("tenant1");
 	 });
 	$("#tenant2StudentsButton").on("click", function() {	
-		 $.get('getAllStudents.html',{tenantId:"tenant2"},function(responseText) { 
-	            var returnedText = responseText;
-	            alert(returnedText);
-	     });
+		setTenant("tenant2");
 	 });
 });
+function setTenant(tenant){
+	$.get('updateTenant.html',{tenantId:tenant},function(responseText) { 
+		updateTable(tenant);
+ 	});
+}
+function updateTable(tenant){
+	$('#tenantDisplay').html(tenant);
+	
+	$.post('getAllStudents.html',function(responseText) { 
+        var objectJson =JSON.parse(responseText);
+        var jsonArray = objectJson.classArray;
+        $('#studentTable tbody').html('');
+        for(var i=0;i<jsonArray.length;i++){
+        	var rows = '<tr><td>' + jsonArray[i].classId   + '</td>' +
+        				   '<td>' + jsonArray[i].className + '</td>' +
+        				   '<td>' + jsonArray[i].username  + '</td>' +
+        				   '<td>' + jsonArray[i].firstname + '</td>' +
+        				   '<td>' + jsonArray[i].lastname  + '</td>' +
+        				   '<td>' + jsonArray[i].email     + '</td></tr>';
+        				   
+        	$('#studentTable tbody').append(rows);
+        }
+        $('#studentTableDiv').css('display','inline');
+ 	});
+	
+}
 </script>
 </body>
 </html>

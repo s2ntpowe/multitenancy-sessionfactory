@@ -15,13 +15,26 @@
 	<context:component-scan base-package="com.powers.multitenant.dao" />
 	<context:component-scan base-package="com.powers.multitenant.controller" />
 	
+	<bean id="defaultDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+    	<property name="driverClass" value="com.mysql.jdbc.Driver" />
+    	<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/studentEnrollment" />
+    	<property name="username" value="springy" />
+    	<property name="password" value="pass" />
+	</bean>
+
+	<bean id="otherDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+    	<property name="driverClass" value="com.mysql.jdbc.Driver" />
+    	<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/userEnrollment" />
+    	<property name="username" value="springy" />
+    	<property name="password" value="pass" />
+	</bean>
 	
-	<bean id="multitenancyConnectionProvider"
-       class="com.powers.multitenant.util.MultiTenantConnectionProviderImpl"/>
-	<bean id="dataSourceLookup"
-       class="com.powers.multitenant.util.MultiTenantDataSourceLookup"/>
-    <bean id="tenantResolver"
-       class="com.powers.multitenant.util.CurrentTenantIdentifierResolverImpl"/>
+	<bean id="multitenancyConnectionProvider" class="com.powers.multitenant.util.MultiTenantConnectionProviderImpl"/>
+	<bean id="dataSourceLookup" class="com.powers.multitenant.util.MultiTenantDataSourceLookup">
+		 <constructor-arg><ref bean="defaultDataSource" /></constructor-arg>
+	     <constructor-arg><ref bean="otherDataSource" /></constructor-arg>
+    </bean>
+    <bean id="tenantResolver" class="com.powers.multitenant.util.CurrentTenantIdentifierResolverImpl"/>
        
 
        
@@ -42,12 +55,7 @@
     	</property>
 	</bean>   
 
-	<bean id="defaultDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-    	<property name="driverClass" value="com.mysql.jdbc.Driver" />
-    	<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/studentEnrollment" />
-    	<property name="username" value="springy" />
-    	<property name="password" value="pass" />
-	</bean>
+
 
 	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 	

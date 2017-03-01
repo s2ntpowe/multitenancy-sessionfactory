@@ -1,7 +1,9 @@
 package com.powers.multitenant.controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -18,12 +20,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.powers.multitenant.model.Classroom;
 import com.powers.multitenant.model.Student;
 import com.powers.multitenant.model.StudentLogin;
+import com.powers.multitenant.service.ClassroomService;
 import com.powers.multitenant.service.StudentService;
 
 
@@ -36,6 +39,9 @@ public class StudentController {
 
 	@Autowired
 	private StudentService studentService;
+	
+	@Autowired
+	private ClassroomService classService;
 		
 	@RequestMapping(value="/signup", method=RequestMethod.GET)
 	public String signup(Model model) {
@@ -91,24 +97,51 @@ public class StudentController {
 		}
 		
 	} 
-
-	@RequestMapping(value="/getAllStudents", method=RequestMethod.GET)
-	public String getAllStudents(@RequestParam("tenantId") String tenantId,HttpSession httpSession) {			
-		System.out.println("In controller...");
-		System.out.println("TENANT ID ====> " +  tenantId);
-		httpSession.setAttribute("hibernate.tenant_identifier_resolver", tenantId);
-		List<Student> students = studentService.getAllStudents();
+	@ResponseBody
+	@RequestMapping(value="/updateTenant", method=RequestMethod.GET)
+	public String updateTenant(@RequestParam("tenantId") String tenantId,HttpSession httpSession,Model model) {			
+		httpSession.setAttribute("hibernate.tenant_identifier_resolver", tenantId);	
+		return "{success : \"true\"}";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/getAllStudents", method=RequestMethod.POST)
+	public String getAllStudents() {			
+		List<Classroom> classList = classService.getAllClassrooms();
 		JSONArray jsonArray = new JSONArray();
-		for(Student s:students){
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("username", s.getUserName());
-			jsonObject.put("firstname", s.getFirstName());
-			jsonObject.put("lastname", s.getLastName());
-			jsonObject.put("email", s.getEmailAddress());
-			jsonArray.add(jsonObject);
-			System.out.println("STUDENT: " + s.getUserName() + " "  + s.getFirstName() + " " + s.getLastName());
+		Set<String>uniqueSet = new HashSet<String>();
+		for(Classroom c:classList)
+		{			
+			List<Student>students = c.getStudents();
+			for(Student s:students){
+				uniqueSet.add(s.getUserName());
+				JSONObject json = new JSONObject();
+				json.put("className", c.getName());
+				json.put("classId", c.getClassId());
+				json.put("username", s.getUserName());
+				json.put("firstname", s.getFirstName());
+				json.put("lastname", s.getLastName());
+				json.put("email", s.getEmailAddress());
+				jsonArray.add(json);
+			}
 		}
-		
-		return jsonArray.toString();
+		List<Student> studentList = studentService.getAllStudents();
+		for(Student s:studentList){
+			if(uniqueSet.add(s.getUserName())){
+				JSONObject json = new JSONObject();
+				json.put("className", "N/A");
+				json.put("classId", "N/A");
+				json.put("username", s.getUserName());
+				json.put("firstname", s.getFirstName());
+				json.put("lastname", s.getLastName());
+				json.put("email", s.getEmailAddress());
+				jsonArray.add(json);
+			}			
+		}	
+		JSONObject classroomJson = new JSONObject();
+		classroomJson.put("classArray", jsonArray);
+		System.out.println(jsonArray.toString());
+		return classroomJson.toString() ;
 	}
 }

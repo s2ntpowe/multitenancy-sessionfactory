@@ -18,6 +18,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name="classroom")
 public class Classroom {
 	@Id
+	@Column(name = "class_id")
 	@GeneratedValue
 	private Long classId;
 	
@@ -35,7 +36,9 @@ public class Classroom {
 	public void setClassId(Long id) {
 		this.classId = id;
 	}
-
+	public List<Student> getStudents() {
+		return students;
+	}
 	public String getName() {
 		return classname;
 	}

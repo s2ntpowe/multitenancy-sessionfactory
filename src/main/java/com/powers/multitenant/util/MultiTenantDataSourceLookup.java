@@ -7,6 +7,8 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.jolbox.bonecp.BoneCPDataSource;
  * @author jose.mgmaestre
  *
  */
+
 @Component(value = "dataSourceLookup")
 public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 
@@ -37,11 +40,14 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 	private String tenantRegex = "@\"^.*?(?=-)\"";
 
 	@Autowired
-	public MultiTenantDataSourceLookup(BoneCPDataSource defaultDataSource) {
+	DataSource otherDataSource;
+	
+	@Autowired
+	public MultiTenantDataSourceLookup(BoneCPDataSource defaultDataSource,BoneCPDataSource otherDataSource) {
 		super();
 
 		try {
-			initializeDataSources(defaultDataSource);
+			initializeDataSources(defaultDataSource,otherDataSource);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,7 +62,7 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 	 * @param tenantResolver
 	 * @throws IOException
 	 */
-	private void initializeDataSources(BoneCPDataSource defaultDataSource) throws IOException {
+	private void initializeDataSources(BoneCPDataSource defaultDataSource,BoneCPDataSource otherDataSource) throws IOException {
 		//Get the path where server is stored, we will save configurations there,
 		//so if we redeploy it will not be deleted
 		String catalinaBase = System.getProperties().getProperty("catalina.base");
@@ -67,10 +73,10 @@ public class MultiTenantDataSourceLookup extends MapDataSourceLookup {
 		// Add the default tenant and datasource
 		addDataSource("tenant1", defaultDataSource);
 		logger.info("Configuring default tenant: DefaultTenant - Properties: " + defaultDataSource.toString());
-
+		addDataSource("tenant2", otherDataSource);
 		// Add the other tenants
 		logger.info("-- CLASSPATH TENANTS --");
-		addTenantDataSources(defaultDataSource, tenantDbConfigs);
+	//	addTenantDataSources(defaultDataSource, tenantDbConfigs);
 		logger.info("-- GLOBAL TENANTS --");
 	//	addTenantDataSources(defaultDataSource,  tenantDbConfigsOverride);
 		logger.info("---------------------------------------------------");
